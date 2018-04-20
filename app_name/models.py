@@ -1,34 +1,36 @@
 from django.db import models
 
-class User (models.Model):
-	email = models.EmailField(max_length=75)
+class InfoClass (models.Model):
+
+class User (InfoClass):
+	email = models.EmailField(max_length=100)
 	first_name = models.CharField(max_length=42)
 	last_name = models.CharField(max_length=42)
-	address = models.CharField(max_length=42)
+	address = models.CharField(max_length=100)
 
-class Product(models.Model):
+class Product(InfoClass):
 	name = models.CharField(max_length=50)
 	description = models.TextField()
+	price = models.FloatField()
 
 
-class CartItem(models.Model):
-    cart = models.ForeignKey("Cart")
-    item = models.ForeignKey(Product)
-
-class Cart(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, blank=True)
-    items = models.ManyToManyField(Product, through=CartItem)
-    timestamp = models.DateTimeField(auto_now_add=True, auto_now=False, )
-    updated = models.DateTimeField(auto_now_add=False, auto_now=True, )
+class Cart(InfoClass):
+	cart_code = models.CharField(max_length=42)
+	product = models.ManyToManyField (Product)
+	paid = models.BooleanField(default=1)
+    
+    def total_price(self, price):
+    	product = Product()
+    	price = price + product.price
 
     def __unicode__(self):
         return str(self.id)
-# Create your models here.
+
+    def is_active(self):
+        return bool(self.active_status)
+
 # Each user would have an email, first name, last name, and shipping address.
 
 # Each cart would have a cart_code, total price, one or more products, and a way to know if the cart has been paid
 
 # Each product would have a price, name, and description.
-
-# While this basic setup is ok, we also want to be able to query for only paid carts and unpaid carts.
-# Also, I want to be able to know when the cart was created and when the cart has been updated.
