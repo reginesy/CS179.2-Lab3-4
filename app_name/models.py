@@ -1,20 +1,20 @@
 from django.db import models
 
-class InfoClass (models.Model):
+class BaseClass(models.Model):
 
-class User (InfoClass):
+class User (BaseClass):
 	email = models.EmailField(max_length=100)
 	first_name = models.CharField(max_length=42)
 	last_name = models.CharField(max_length=42)
 	address = models.CharField(max_length=100)
 
-class Product(InfoClass):
+class Product(BaseClass):
 	name = models.CharField(max_length=50)
 	description = models.TextField()
 	price = models.FloatField()
 
 
-class Cart(InfoClass):
+class Cart(BaseClass):
 	cart_code = models.CharField(max_length=42)
 	product = models.ManyToManyField (Product)
 	paid = models.BooleanField(default=1)
