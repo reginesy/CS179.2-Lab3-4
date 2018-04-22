@@ -1,33 +1,32 @@
 from django.db import models
 
-class BaseClass(models.Model):
-
-class User (BaseClass):
+class User (models.Model):
 	email = models.EmailField(max_length=100)
 	first_name = models.CharField(max_length=42)
 	last_name = models.CharField(max_length=42)
 	address = models.CharField(max_length=100)
 
-class Product(BaseClass):
+	def __str__(self):
+        return '%s %s' % (self.first_name, self.last_name)
+
+class Product(models.Model):
 	name = models.CharField(max_length=50)
 	description = models.TextField()
-	price = models.FloatField()
+	price = models.DecimalField(max_digits=10, decimal_places=2)
 
+	def __str__(self):
+		return self.name
 
-class Cart(BaseClass):
+class Cart(models.Model):
 	cart_code = models.CharField(max_length=42)
 	product = models.ManyToManyField (Product)
-	paid = models.BooleanField(default=1)
+	total_price = models.DecimalField(max_digits=10, decimal_places=2)
+	paid = models.BooleanField(default=True)
+	created = models.DateTimeField(auto_now_add=True)
+	updated = models.DateTimeField(auto_now = True)
     
-    def total_price(self, price):
-    	product = Product()
-    	price = price + product.price
-
-    def __unicode__(self):
-        return str(self.id)
-
-    def is_active(self):
-        return bool(self.active_status)
+    def __str__(self):
+    	return self.cart_code
 
 # Each user would have an email, first name, last name, and shipping address.
 
